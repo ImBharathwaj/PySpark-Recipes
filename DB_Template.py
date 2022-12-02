@@ -1,8 +1,9 @@
+# Creating RDD using database template
 from pyspark.sql import SparkSession
 from pyspark.sql import Row
 
 spark = (
-    SparkSession.builder.config("spark.jars", "/tmp/postgresql-42.2.6.jar")
+    SparkSession.builder.config("spark.driver.extraClassPath", "/tmp/postgresql-42.2.6.jar")
     .master("local")
     .appName("PySpark_Postgres_test")
     .getOrCreate()
@@ -19,3 +20,4 @@ df = (
 )
 
 df.printSchema()
+df.show()
