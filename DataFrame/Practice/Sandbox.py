@@ -74,3 +74,20 @@ package_count = package_count.withColumn(
 package_count.show(10)
 
 package_count.filter(package_count.package=='DT').show()
+
+# Creates or replaces a local temporary view with a DataFrame.
+# The lifetime of this temporary table is tied to the SparkSession that was used to create this DataFrame.
+package_count.createOrReplaceTempView('package_count_sql_table')
+
+# Basic Spark SQL Query - 1
+query_result = sqlContext.sql(
+    "SELECT perc FROM package_count_sql_table WHERE package = 'DF'")
+print(query_result.collect())
+
+# Basic Spark SQL Query - 2
+query_result = sqlContext.sql(
+    "SELECT * FROM package_count_sql_table WHERE count > 1000 ORDER BY count ASC")
+print(query_result.show(5))
+
+# Use the spark RDD way to process the results from Spark SQL query result
+query_result.rdd.map(lambda x: x['package']+':'+x['perc']).take(10)
